@@ -1,104 +1,21 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import { connect } from 'react-redux';
 
 class ListComponent extends Component{
-	state={
-		data: [
-    {
-        "phone": "9989789871", 
-        "name": "Name 1", 
-        "email": "name1@email.com",
-        "poster":"1.jpg",
-        "id":1
-    }, 
-    {
-        "phone": "9989789871", 
-        "name": "Name 2", 
-        "email": "name2@email.com",
-        "poster":"2.jpg",
-        "id":2
-    }, 
-    {
-        "phone": "9989789871", 
-        "name": "Name 3", 
-        "email": "name2@email.com",
-        "poster":"3.jpg",
-        "id":3
-    }, 
-    {
-        "phone": "9989789871", 
-        "name": "Name 4", 
-        "email": "name2@email.com",
-        "poster":"7.jpg",
-        "id":4
-    }, 
-    {
-        "phone": "9989789871", 
-        "name": "Name 5", 
-        "email": "name2@email.com",
-        "poster":"5.jpg",
-        "id":5
-    }, 
-    {
-        "phone": "9989789871", 
-        "name": "Name 6", 
-        "email": "name2@email.com",
-        "poster":"7.jpg",
-        "id":7
-    }, 
-    {
-        "phone": "9989789871", 
-        "name": "Name 8", 
-        "email": "name2@email.com",
-        "poster":"8.jpg",
-        "id":8
-    }, 
-    {
-        "phone": "9989789871", 
-        "name": "Name 9", 
-        "email": "name2@email.com",
-        "poster":"9.jpg",
-        "id":9
-    }, 
-    {
-        "phone": "9989789871", 
-        "name": "Name 10", 
-        "email": "name2@email.com",
-        "poster":"10.jpg",
-        "id":10
-    }, 
-    {
-        "phone": "9989789871", 
-        "name": "Name 11", 
-        "email": "name2@email.com",
-        "poster":"11.jpg",
-        "id":11
-    }, 
-    {
-        "phone": "9989789871", 
-        "name": "Name 12", 
-        "email": "name2@email.com",
-        "poster":"12.jpg",
-        "id":12
-    },{
-        "phone": "9989789871", 
-        "name": "Name 13", 
-        "email": "name2@email.com",
-        "poster":"13.jpg",
-        "id":13
+    componentDidMount(){
+        //this.props.setContactList();
     }
-
-]
-	}
   render(){
-    return(<div>
+    return(<div className="listContainer">
     	<div>
-    <h2 className="page-header text-center">List of contacts</h2>
-    <p className="text-center">
-        <a className="btn btn-md btn-outline">Add Contact</a>
-    </p>
+    <h4 className="page-header text-center">List of contacts</h4>
+    <div className="row buttonCover">
+        <button onClick={this.enableAddUserFromComp.bind(this)} className="btn btn-primary float-right">Add contact</button>
+    </div>
     <ul className="media-list row contacts-container">
-       {this.state.data.map((value, index)=>{
-       	return(<li className="media col-md-4 col-lg-4 col-sm-5 col-xs-12 col-md-offset-1 well">
+       {this.props.data.map((value, index)=>{
+       	return(<li key={value.id} className="media col-md-4 col-lg-4 col-sm-5 col-xs-12 col-md-offset-1 well">
             <div className="thumbnail col-md-4">
                 <img className="media-object" src={process.env.PUBLIC_URL + value.poster} />
             </div>
@@ -116,11 +33,15 @@ class ListComponent extends Component{
                 </div>
                 <br/>
                 <div className="media-footer">
-                    <small>
-                    <a><span className="glyphicon glyphicon-pencil"></span></a>
-                    <a  className="delete-contract">
-                      <span className="glyphicon glyphicon-trash"></span>
-                    </a>
+                <small>
+                    <div className="row">
+                     <div className="col-md-4 col-lg-4 col-sm-4 cpl-xs-4">
+                            <button onClick={this.EditUser.bind(this, value)} className="btn btn-light" >Edit</button>
+                     </div>
+                     <div className="col-md-4 col-lg-4 col-sm-4 cpl-xs-4">
+                            <button className="btn btn-secondary" onClick={this.deleteCurrentContact.bind(this, value.id)}>Delete</button>
+                     </div>
+                    </div>
                 </small>
                 </div>
             </div>
@@ -133,6 +54,44 @@ class ListComponent extends Component{
 
     	</div>)
   }
+  deleteCurrentContact(_id){
+      this.props.deleteContact(_id);
+  }
+  enableAddUserFromComp(){
+      this.props.enableAddUserFromReducer();
+  }
+  EditUser(user){
+      this.props.editUserFromReducer(user);
+  }
 }
 
-export default ListComponent;
+const mapStateToProps = (state)=>{
+    return{
+       data: state.data,
+       enableAddUser: state.enableAddUser,
+       addOrEdit: state.addOrEdit
+    }
+}
+
+const mapDispatchToProps = (dispatch)=>{
+    return{
+       deleteContact: (id)=>{
+           dispatch({type: 'DELETE_CONTACT', value: id});
+       },
+       enableAddUserFromReducer: ()=>{
+           dispatch({type: 'ENABLE_ADD_USER'});
+       },
+       editUserFromReducer: (user)=>{
+          dispatch({type: 'EDIT_USER_SHOW', value: user});
+       },
+       setContactList:(list)=>{
+           axios.get(`/api/list`)
+         .then((res)=>{
+            dispatch({type: 'GET_USER', value: res.data});
+       })
+       .catch((e)=> console.log('Error in fetching data', e));
+         }
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(ListComponent);

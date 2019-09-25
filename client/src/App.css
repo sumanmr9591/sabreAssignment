@@ -1,4 +1,10 @@
-#mainHeader{
+body{
+  background: #655 !important;
+}
+#formContainer{
+  color: #ffffff;
+}
+#mainHeader, #footer{
   background: #000000;
   height:50px;
   width:100%;
@@ -8,13 +14,24 @@
   color: #ffffff;
   font-weight: bold;
 }
-#headLine{
+#headLine, #footerLine{
   line-height: 50px;
 }
-body {
-    padding-top: 10px;
+.buttonCoverAdd{
+  padding-left: 15px;
 }
-
+.listContainer{
+background: #655 !important;
+}
+.btn-primary{
+      color: #fff !important;
+    background-color: tan !important;
+    border-color: #ccc !important;
+}
+.buttonCover{
+  margin-bottom: 15px;
+  padding-left: 3.5%;
+}
 .thumbnail {
     display: block;
     margin-bottom: 0;
@@ -58,4 +75,12 @@ a.thumbnail:hover,
 a.thumbnail:focus,
 a.thumbnail.active {
     border-color: #563d7c;
+}
+.well{
+  padding-top: 10px;
+  padding-bottom: 20px;
+    background: tan;
+    border-radius: .8em;
+    box-shadow: 0 0 0 0.6em #655;
+    outline: 10px solid #655;
 }
