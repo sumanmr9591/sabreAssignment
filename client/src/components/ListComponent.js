@@ -7,7 +7,7 @@ class ListComponent extends Component{
         //this.props.setContactList();
     }
   render(){
-    return(<div className="listContainer">
+    return(<div className="listContainer" data-test="listComponent">
     	<div>
     <h4 className="page-header text-center">List of contacts</h4>
     <div className="row buttonCover">
